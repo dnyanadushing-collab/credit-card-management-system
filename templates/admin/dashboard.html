@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - CCMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>Admin Panel</h1>
+    <div>
+        <span style="background: rgba(99, 102, 241, 0.1); padding: 10px 20px; border-radius: 12px; color: var(--primary);">System Status: Online</span>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="glass-card" style="padding: 1.5rem;">
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Total Users</p>
+        <h2 style="font-size: 2rem;">{{ total_users }}</h2>
+    </div>
+    <div class="glass-card" style="padding: 1.5rem;">
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Total Cards</p>
+        <h2 style="font-size: 2rem;">{{ total_cards }}</h2>
+    </div>
+    <div class="glass-card" style="padding: 1.5rem;">
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Pending Applications</p>
+        <h2 style="font-size: 2rem; color: #f59e0b;">{{ pending_apps|length }}</h2>
+    </div>
+</div>
+
+<div class="glass-card">
+    <h3 style="margin-bottom: 1.5rem;">Pending Credit Card Applications</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; color: var(--text-muted); border-bottom: 1px solid var(--glass-border);">
+                <th style="padding: 1rem;">Applicant Name</th>
+                <th style="padding: 1rem;">Income</th>
+                <th style="padding: 1rem;">Status</th>
+                <th style="padding: 1rem;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in pending_apps %}
+            <tr style="border-bottom: 1px solid var(--glass-border);">
+                <td style="padding: 1rem;">{{ app.full_name }} ({{ app.applicant.username }})</td>
+                <td style="padding: 1rem;">₹{{ app.income }}</td>
+                <td style="padding: 1rem;">{{ app.employment_status }}</td>
+                <td style="padding: 1rem; display: flex; gap: 10px;">
+                    <form action="{{ url_for('approve_application', app_id=app.id) }}" method="POST">
+                        <button type="submit" class="btn" style="padding: 5px 15px; font-size: 0.8rem; background: #22c55e;">Approve</button>
+                    </form>
+                    <button class="btn" style="padding: 5px 15px; font-size: 0.8rem; background: #ef4444;" onclick="showRejectModal({{ app.id }})">Reject</button>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-muted);">No pending applications.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="glass-card" style="margin-top: 2rem;">
+    <h3 style="margin-bottom: 1.5rem;">System Transactions (Latest)</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; color: var(--text-muted); border-bottom: 1px solid var(--glass-border);">
+                <th style="padding: 1rem;">User</th>
+                <th style="padding: 1rem;">Card #</th>
+                <th style="padding: 1rem;">Amount</th>
+                <th style="padding: 1rem;">Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in all_transactions %}
+            <tr style="border-bottom: 1px solid var(--glass-border);">
+                <td style="padding: 1rem;">{{ tx.card.owner.username }}</td>
+                <td style="padding: 1rem;">**** **** **** {{ tx.card.card_number[-4:] }}</td>
+                <td style="padding: 1rem;">₹{{ tx.amount }}</td>
+                <td style="padding: 1rem; color: var(--text-muted);">{{ tx.timestamp.strftime('%d %b, %H:%M') }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-muted);">No records found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Simple Reject Modal -->
+<div id="rejectModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center;">
+    <div class="glass-card" style="width:400px;">
+        <h3>Reject Application</h3>
+        <form id="rejectForm" method="POST">
+            <textarea name="comment" placeholder="Reason for rejection..." style="width:100%; height:100px; margin:1rem 0; background:rgba(255,255,255,0.1); border:1px solid var(--glass-border); color:white; padding:10px; border-radius:10px;"></textarea>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button type="button" class="btn btn-secondary" onclick="hideRejectModal()">Cancel</button>
+                <button type="submit" class="btn" style="background:#ef4444;">Reject</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showRejectModal(appId) {
+    document.getElementById('rejectForm').action = "/admin/reject/" + appId + "/";
+    document.getElementById('rejectModal').style.display = 'flex';
+}
+function hideRejectModal() {
+    document.getElementById('rejectModal').style.display = 'none';
+}
+</script>
+{% endblock %}

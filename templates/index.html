@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - CCMS{% endblock %}
+
+{% block content %}
+<div
+    style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; text-align: center;">
+    <div class="glass-card" style="max-width: 800px; padding: 4rem;">
+        <i class="fas fa-credit-card fa-5x" style="color: var(--primary); margin-bottom: 2rem;"></i>
+        <h1
+            style="font-size: 3.5rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #FF9933, #ffffff, #138808); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            Modern Indian Credit Management
+        </h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 3rem; line-height: 1.6;">
+            A high-performance, secure system for managing applications, transactions, and payments. Experience total
+            control over your credit with our premium dashboard.
+        </p>
+        <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/login/" class="btn" style="padding: 1.2rem 3rem; font-size: 1.1rem;">User Login</a>
+            <a href="/admin-panel/" class="btn btn-secondary"
+                style="padding: 1.2rem 3rem; font-size: 1.1rem; border-color: #FF9933; color: #FF9933;">Admin Portal</a>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; max-width: 1000px;">
+        <div class="glass-card" style="padding: 2rem; border-top: 3px solid #FF9933;">
+            <i class="fas fa-shield-alt fa-2x" style="color: #FF9933; margin-bottom: 1rem;"></i>
+            <h3>Secure</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Advanced encryption for every ₹ transaction.</p>
+        </div>
+        <div class="glass-card" style="padding: 2rem; border-top: 3px solid #138808;">
+            <i class="fas fa-bolt fa-2x" style="color: #138808; margin-bottom: 1rem;"></i>
+            <h3>Digital India</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Seamless integration with modern banking.</p>
+        </div>
+        <div class="glass-card" style="padding: 2rem;">
+            <i class="fas fa-mobile-alt fa-2x" style="color: #22c55e; margin-bottom: 1rem;"></i>
+            <h3>Responsive</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Access your dashboard from any device.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

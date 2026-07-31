@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Make Payment - CCMS{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="glass-card">
+        <h2 style="margin-bottom: 1.5rem;">Bill Payment</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">Settle your outstanding credit card balance quickly and securely.</p>
+        
+        <form method="POST">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Select card to pay for</label>
+                <select name="card_id" required style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                    {% for card in cards %}
+                        <option value="{{ card.id }}">**** **** **** {{ card.card_number[-4:] }} (Balance: ₹{{ card.balance }})</option>
+                    {% else %}
+                        <option disabled>No active cards found</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Payment Amount (₹)</label>
+                <input type="number" step="0.01" name="amount" required placeholder="0.00" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Description</label>
+                <input type="text" name="description" placeholder="e.g. Monthly Bill Payment" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Category</label>
+                <select name="category" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                    <option value="Payment">Payment</option>
+                    <option value="Transfer">Transfer</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn" style="flex: 1;">Confirm Payment</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+    
+    <div style="margin-top: 2rem; padding: 1rem; border-left: 4px solid var(--primary); background: rgba(99, 102, 241, 0.05); border-radius: 0 10px 10px 0;">
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Payments are typically reflected on your account balance immediately. For large payments, it may take up to 24 hours to update your available limit.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Transactions - CCMS{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>Detailed Transaction History</h2>
+        <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Download Report</button>
+    </div>
+    
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; color: var(--text-muted); border-bottom: 2px solid var(--glass-border);">
+                <th style="padding: 1rem;">Transaction ID</th>
+                <th style="padding: 1rem;">Date & Time</th>
+                <th style="padding: 1rem;">Description</th>
+                <th style="padding: 1rem;">Category</th>
+                <th style="padding: 1rem; text-align: right;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+            <tr style="border-bottom: 1px solid var(--glass-border); transition: 0.3s; cursor: default;">
+                <td style="padding: 1rem; font-family: monospace; color: var(--primary);">#TX-{{ tx.id + 1000 }}</td>
+                <td style="padding: 1rem;">{{ tx.timestamp.strftime('%d %b, %Y %H:%M') }}</td>
+                <td style="padding: 1rem;">{{ tx.description }}</td>
+                <td style="padding: 1rem;"><span style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 5px; font-size: 0.85rem;">{{ tx.category }}</span></td>
+                <td style="padding: 1rem; text-align: right; color: #ef4444; font-weight: 600;">-₹{{ tx.amount }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" style="padding: 4rem; text-align: center; color: var(--text-muted);">No records found for this account.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

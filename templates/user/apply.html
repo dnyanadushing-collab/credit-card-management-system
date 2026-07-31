@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply for Card - CCMS{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="margin-bottom: 2rem;">Credit Card Application</h2>
+    <form method="POST">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Full Name</label>
+                <input type="text" name="full_name" required style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Monthly Income (₹)</label>
+                <input type="number" name="income" required style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Employment Status</label>
+                <select name="employment_status" required style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+                    <option value="Employed">Employed</option>
+                    <option value="Self-Employed">Self-Employed</option>
+                    <option value="Unemployed">Unemployed</option>
+                    <option value="Student">Student</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Address</label>
+                <input type="text" name="address" required style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.2); color: white; outline: none;">
+            </div>
+        </div>
+        <div style="background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+            <p style="font-size: 0.9rem; color: var(--text-muted);">By submitting this application, you agree to our terms and conditions. Our team will review your application within 2-3 business days.</p>
+        </div>
+        <button type="submit" class="btn">Submit Application</button>
+        <a href="/dashboard/" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CCMS - Credit Card Management{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF9933; /* Saffron */
+            --primary-dark: #cc7a29;
+            --secondary: #138808; /* Indian Green */
+            --accent: #000080;   /* Ashoka Blue */
+            --bg-dark: #0a0f1e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-light: #fefefe;
+            --text-muted: #cbd5e1;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255, 153, 51, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(19, 136, 8, 0.05) 0%, transparent 40%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50L60 40M50 50L40 40M50 50L60 60M50 50L40 60' stroke='%23ffffff' stroke-opacity='0.03' fill='none'/%3E%3Ccircle cx='50' cy='50' r='5' stroke='%23ffffff' stroke-opacity='0.03' fill='none'/%3E%3C/svg%3E");
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Glassmorphism */
+        .sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-links li {
+            margin-bottom: 1rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+
+        .content {
+            flex-grow: 1;
+            margin-left: 280px;
+            padding: 3rem;
+            width: calc(100% - 280px);
+        }
+
+        /* Generic UI Elements */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 80px; padding: 1rem; }
+            .sidebar .logo span, .sidebar .nav-links span { display: none; }
+            .content { margin-left: 80px; width: calc(100% - 80px); padding: 1.5rem; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% if current_user.is_authenticated %}
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fas fa-credit-card"></i>
+            <span>CCMS</span>
+        </div>
+        <ul class="nav-links">
+            {% if current_user.is_admin %}
+                <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.path == '/admin-panel/' %}active{% endif %}"><i class="fas fa-chart-line"></i> <span>Admin View</span></a></li>
+                <li><a href="{{ url_for('admin_users') }}" class="{% if request.path == '/admin/users/' %}active{% endif %}"><i class="fas fa-users"></i> <span>Manage Users</span></a></li>
+                <li><a href="{{ url_for('dashboard') }}" class="{% if request.path == '/dashboard/' %}active{% endif %}"><i class="fas fa-eye"></i> <span>User Preview</span></a></li>
+            {% else %}
+                <li><a href="{{ url_for('dashboard') }}" class="{% if request.path == '/dashboard/' %}active{% endif %}"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
+                <li><a href="{{ url_for('apply_card') }}" class="{% if request.path == '/apply/' %}active{% endif %}"><i class="fas fa-plus-circle"></i> <span>Apply Card</span></a></li>
+                <li><a href="{{ url_for('transactions') }}" class="{% if request.path == '/transactions/' %}active{% endif %}"><i class="fas fa-history"></i> <span>Transactions</span></a></li>
+                <li><a href="{{ url_for('payment') }}" class="{% if request.path == '/payment/' %}active{% endif %}"><i class="fas fa-file-invoice-dollar"></i> <span>Payments</span></a></li>
+                <li><a href="{{ url_for('profile') }}" class="{% if request.path == '/profile/' %}active{% endif %}"><i class="fas fa-user"></i> <span>Profile</span></a></li>
+            {% endif %}
+            <li style="margin-top: 2rem;"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="content" {% if not current_user.is_authenticated %}style="margin-left: 0; width: 100%;"{% endif %}>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="messages">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
